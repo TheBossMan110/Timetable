@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="StudyOS">
+<meta name="theme-color" content="#ffffff">
+<title>StudyOS – AS Level</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#f5f4f0;
+  --bg2:#eeece8;
+  --card:#ffffff;
+  --border:#e4e2dc;
+  --border2:#d0cec8;
+  --text:#1a1916;
+  --muted:#8a8880;
+  --dim:#c0beb8;
+  --accent:#5b4fd4;
+  --accent-light:#f0eeff;
+  --accent-mid:#e0dcff;
+  --green:#1c9e5e;
+  --green-light:#e8f8f0;
+  --green-mid:#b8ecd4;
+  --amber:#c07810;
+  --amber-light:#fef5e4;
+  --red:#c0362a;
+  --red-light:#fdecea;
+  --blue:#1a6fd4;
+  --blue-light:#e8f1fd;
+  --teal:#0e8a72;
+  --teal-light:#e4f7f3;
+  --r:16px;--r2:12px;--r3:8px;
+  --font:'Nunito',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --shadow:0 2px 12px rgba(0,0,0,.07);
+  --shadow2:0 4px 20px rgba(0,0,0,.1);
+}
+
+html{height:100%;overflow:hidden}
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  height:100%;
+  overflow:hidden;
+}
+
+/* ── APP SHELL ── */
+.app{
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+  height:100dvh;
+  max-width:430px;
+  margin:0 auto;
+  background:var(--bg);
+  position:relative;
+  overflow:hidden;
+}
+
+/* ── PAGES CONTAINER ── */
+.pages{
+  flex:1;
+  overflow:hidden;
+  position:relative;
+}
+
+/* ── EACH PAGE ── */
+.page{
+  position:absolute;
+  inset:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  display:none;
+  padding-bottom:90px;
+}
+.page::-webkit-scrollbar{display:none}
+.page.active{display:block}
+
+/* ── BOTTOM NAV ── */
+.nav-bar{
+  height:64px;
+  padding-bottom:env(safe-area-inset-bottom);
+  background:var(--card);
+  border-top:1px solid var(--border);
+  display:flex;
+  position:relative;
+  z-index:100;
+  box-shadow:0 -2px 12px rgba(0,0,0,.06);
+}
+.nav-item{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  cursor:pointer;
+  transition:transform .15s;
+  border:none;
+  background:none;
+  -webkit-appearance:none;
+}
+.nav-item:active{transform:scale(.9)}
+.nav-icon{font-size:22px;transition:transform .2s}
+.nav-label{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--dim);transition:color .2s}
+.nav-item.active .nav-label{color:var(--accent)}
+.nav-item.active .nav-icon{transform:scale(1.15)}
+
+/* ── PAGE HEADER ── */
+.page-header{
+  padding:52px 20px 14px;
+  background:var(--bg);
+  position:sticky;
+  top:0;
+  z-index:10;
+  transition:all .2s;
+}
+.page-header.scrolled{
+  background:rgba(245,244,240,.95);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  box-shadow:0 1px 8px rgba(0,0,0,.05);
+}
+.page-title{font-size:28px;font-weight:800;letter-spacing:-.5px;color:var(--text)}
+.page-sub{font-size:12px;color:var(--muted);margin-top:2px;font-family:var(--mono)}
+
+/* ── HERO CARD ── */
+.hero-card{
+  margin:12px 16px 0;
+  background:var(--accent);
+  border-radius:22px;
+  padding:20px;
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+}
+.hero-card::after{
+  content:'';
+  position:absolute;
+  right:-30px;top:-30px;
+  width:160px;height:160px;
+  background:rgba(255,255,255,.06);
+  border-radius:50%;
+}
+.hero-greeting{font-size:11px;opacity:.75;font-family:var(--mono);margin-bottom:4px;letter-spacing:.5px}
+.hero-main{font-size:21px;font-weight:800;line-height:1.25;margin-bottom:14px}
+.hero-stats{display:flex;gap:8px}
+.hero-stat{background:rgba(255,255,255,.15);border-radius:12px;padding:10px 12px;flex:1;backdrop-filter:blur(4px)}
+.hero-val{font-size:20px;font-weight:800;font-family:var(--mono);line-height:1}
+.hero-lab{font-size:9px;opacity:.75;margin-top:3px;letter-spacing:.3px}
+
+/* ── NOTIF BANNER ── */
+.notif-banner{
+  margin:12px 16px 0;
+  background:var(--amber-light);
+  border:1px solid #f0c060;
+  border-radius:var(--r2);
+  padding:12px 14px;
+  display:flex;align-items:center;gap:10px;
+}
+.nb-text{flex:1;font-size:12px;color:var(--amber);line-height:1.4;font-weight:600}
+.nb-btn{
+  background:var(--amber);color:#fff;border:none;border-radius:8px;
+  padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;
+  font-family:var(--font);white-space:nowrap;
+  transition:transform .15s,opacity .15s;
+}
+.nb-btn:active{transform:scale(.94);opacity:.85}
+
+/* ── DAILY PROGRESS ── */
+.daily-prog{
+  margin:12px 16px 0;
+  background:var(--card);
+  border-radius:var(--r);
+  padding:14px 16px;
+  box-shadow:var(--shadow);
+}
+.prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.prog-title{font-size:13px;font-weight:700}
+.prog-count{font-size:11px;font-family:var(--mono);color:var(--muted)}
+.prog-track{height:6px;background:var(--bg2);border-radius:3px;overflow:hidden}
+.prog-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--green),#34c87a);
+  border-radius:3px;
+  transition:width .6s cubic-bezier(.4,0,.2,1);
+}
+.hrs-row{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--muted);font-family:var(--mono)}
+
+/* ── SECTION LABEL ── */
+.section-label{
+  font-size:10px;font-weight:800;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--muted);
+  padding:18px 20px 8px;
+}
+
+/* ── SLOT CARDS ── */
+.slot-card{
+  margin:0 16px 8px;
+  background:var(--card);
+  border-radius:var(--r);
+  padding:13px 14px;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:var(--shadow);
+  border:1px solid var(--border);
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  transition:transform .15s,box-shadow .15s;
+  -webkit-user-select:none;user-select:none;
+}
+.slot-card:active{transform:scale(.97);box-shadow:none}
+.slot-card.break-slot{opacity:.6;box-shadow:none;border-color:transparent;background:transparent}
+.slot-card.gym-slot{background:var(--green-light);border-color:var(--green-mid)}
+.slot-card.done-slot .slot-title{text-decoration:line-through;color:var(--muted)}
+.slot-card.done-slot{opacity:.55;background:var(--bg2)}
+
+/* Color accent strip */
+.slot-card::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:4px;border-radius:4px 0 0 4px;
+}
+.slot-card.math::before{background:var(--blue)}
+.slot-card.physics::before{background:var(--accent)}
+.slot-card.cs::before{background:var(--teal)}
+.slot-card.english::before{background:var(--amber)}
+.slot-card.gym-slot::before{background:var(--green)}
+.slot-card.break-slot::before{display:none}
+
+/* NOW highlight */
+.slot-card.now-slot{
+  border-color:var(--accent);
+  box-shadow:0 0 0 1.5px var(--accent-mid),var(--shadow2);
+}
+
+/* ── CHECKBOX ── */
+.check-circle{
+  width:30px;height:30px;min-width:30px;
+  border-radius:50%;
+  border:2px solid var(--border2);
+  background:none;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+  color:transparent;
+  transition:all .2s cubic-bezier(.34,1.56,.64,1);
+  -webkit-appearance:none;
+  appearance:none;
+}
+.check-circle.ticked{
+  background:var(--green);
+  border-color:var(--green);
+  color:#fff;
+  transform:scale(1.1);
+}
+.check-circle:active{transform:scale(.88)!important}
+
+.slot-body{flex:1;min-width:0}
+.slot-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.slot-meta{font-size:11px;color:var(--muted);margin-top:2px;font-family:var(--mono)}
+.slot-time{font-size:11px;font-family:var(--mono);color:var(--muted);flex-shrink:0}
+
+/* NOW badge */
+.now-badge{
+  background:var(--accent);color:#fff;
+  font-size:9px;font-weight:800;letter-spacing:.5px;
+  padding:2px 7px;border-radius:5px;text-transform:uppercase;
+  margin-left:6px;vertical-align:middle;
+}
+/* Pulse dot */
+.pulse-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--accent);flex-shrink:0;
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(91,79,212,.4)}
+  50%{box-shadow:0 0 0 6px rgba(91,79,212,0)}
+}
+
+/* ── TIMETABLE ── */
+.week-tabs{
+  display:flex;gap:6px;padding:4px 20px 0;
+  overflow-x:auto;
+}
+.week-tabs::-webkit-scrollbar{display:none}
+.day-tab{
+  flex-shrink:0;padding:7px 14px;border-radius:20px;
+  border:1.5px solid var(--border);background:var(--card);
+  color:var(--muted);font-size:12px;font-weight:700;
+  cursor:pointer;transition:all .2s;font-family:var(--font);
+}
+.day-tab.selected{background:var(--accent);border-color:var(--accent);color:#fff;transform:scale(1.04)}
+.day-tab.today-t{border-color:var(--accent);color:var(--accent)}
+.day-tab:active{transform:scale(.94)}
+.tt-list{padding:12px 0 0}
+.tt-slot{
+  margin:0 16px 8px;
+  background:var(--card);border:1px solid var(--border);
+  border-left:4px solid var(--border2);
+  border-radius:var(--r);padding:13px 14px;
+  display:flex;gap:12px;align-items:flex-start;
+  box-shadow:var(--shadow);
+}
+.tt-slot.math{border-left-color:var(--blue)}
+.tt-slot.physics{border-left-color:var(--accent)}
+.tt-slot.cs{border-left-color:var(--teal)}
+.tt-slot.english{border-left-color:var(--amber)}
+.tt-slot.gym{border-left-color:var(--green)}
+.tt-slot.rest{opacity:.5}
+.tt-time{font-size:11px;font-family:var(--mono);color:var(--muted);min-width:82px;padding-top:2px;line-height:1.4}
+.tt-subj{font-size:13px;font-weight:700}
+.tt-topic{font-size:11px;color:var(--muted);margin-top:3px}
+.subj-pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:8px;margin-top:6px}
+.sp-math{background:var(--blue-light);color:var(--blue)}
+.sp-physics{background:var(--accent-light);color:var(--accent)}
+.sp-cs{background:var(--teal-light);color:var(--teal)}
+.sp-english{background:var(--amber-light);color:var(--amber)}
+.sp-gym{background:var(--green-light);color:var(--green)}
+
+/* ── SUBJECTS ── */
+.subj-card{
+  margin:0 16px 12px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;
+  box-shadow:var(--shadow);
+  transition:transform .15s;
+}
+.subj-head{
+  padding:15px 16px;display:flex;align-items:center;gap:12px;
+  cursor:pointer;transition:background .15s;
+}
+.subj-head:active{background:var(--bg2)}
+.subj-icon{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.subj-meta{flex:1}
+.subj-name{font-size:14px;font-weight:800}
+.subj-board{font-size:11px;color:var(--muted);margin-top:2px;font-family:var(--mono)}
+.subj-pct{font-size:18px;font-weight:800;font-family:var(--mono)}
+.subj-bar-wrap{height:3px;background:var(--bg2);margin:0 16px;overflow:hidden;border-radius:2px}
+.subj-bar-fill{height:100%;border-radius:2px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.subj-body{padding:0 16px 14px;border-top:1px solid var(--border);margin-top:0}
+.paper-title{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:12px 0 6px}
+.topic-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 0;border-bottom:1px solid var(--border);
+  cursor:pointer;transition:background .12s;
+  margin:0 -16px;padding-left:16px;padding-right:16px;
+  -webkit-user-select:none;user-select:none;
+}
+.topic-row:last-child{border-bottom:none}
+.topic-row:active{background:var(--bg2)}
+.topic-dot{
+  width:24px;height:24px;border-radius:50%;
+  border:2px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;flex-shrink:0;
+  transition:all .2s cubic-bezier(.34,1.56,.64,1);
+}
+.topic-dot.inprog{border-color:var(--amber);background:var(--amber-light);color:var(--amber)}
+.topic-dot.done{border-color:var(--green);background:var(--green-light);color:var(--green);transform:scale(1.12)}
+.topic-name{flex:1;font-size:13px;font-weight:500}
+.topic-tag{font-size:9px;font-weight:700;padding:3px 9px;border-radius:8px}
+.tag-todo{background:var(--bg2);color:var(--muted)}
+.tag-inprog{background:var(--amber-light);color:var(--amber)}
+.tag-done{background:var(--green-light);color:var(--green)}
+
+/* ── PROGRESS ── */
+.prog-card{
+  margin:0 16px 12px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);padding:16px;
+  box-shadow:var(--shadow);
+}
+.prog-card h3{font-size:13px;font-weight:800;margin-bottom:14px}
+.sbr{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.sbr:last-child{margin-bottom:0}
+.sbr-name{font-size:12px;font-weight:700;min-width:80px}
+.sbr-track{flex:1;height:8px;background:var(--bg2);border-radius:4px;overflow:hidden}
+.sbr-fill{height:100%;border-radius:4px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.sbr-pct{font-size:11px;font-family:var(--mono);font-weight:500;min-width:34px;text-align:right}
+
+.cd-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:0 16px 12px}
+.cd-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;text-align:center;box-shadow:var(--shadow)}
+.cd-val{font-size:36px;font-weight:800;font-family:var(--mono);line-height:1}
+.cd-lab{font-size:10px;font-weight:700;color:var(--muted);margin-top:5px;letter-spacing:.5px;text-transform:uppercase}
+
+.cal-card{margin:0 16px 12px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--shadow)}
+.cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.cal-head h3{font-size:13px;font-weight:800}
+.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px}
+.cal-dow span{text-align:center;font-size:9px;font-weight:700;color:var(--muted);font-family:var(--mono)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-cell{aspect-ratio:1;border-radius:6px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:10px;font-family:var(--mono);color:var(--dim)}
+.cal-cell.s1{background:#d4f0e2;color:var(--green)}
+.cal-cell.s2{background:#a8e4c4;color:var(--green)}
+.cal-cell.s3{background:#7cd8a8;color:#0d5a38}
+.cal-cell.s4{background:var(--green);color:#fff}
+.cal-cell.today-c{outline:2.5px solid var(--accent);outline-offset:1px}
+.cal-cell.future-c{opacity:.3}
+.cal-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+.cal-legend span{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);font-weight:600}
+.cal-legend i{display:inline-block;width:10px;height:10px;border-radius:3px}
+
+/* ── SETTINGS ── */
+.set-section{margin:0 16px 12px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
+.set-title{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:13px 16px 8px}
+.set-row{display:flex;align-items:center;padding:12px 16px;border-top:1px solid var(--border);gap:12px}
+.sr-icon{font-size:18px;width:28px;text-align:center;flex-shrink:0}
+.sr-info{flex:1}
+.sr-label{font-size:13px;font-weight:700}
+.sr-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.toggle{position:relative;width:44px;height:26px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.tog-sl{position:absolute;inset:0;background:var(--dim);border-radius:13px;cursor:pointer;transition:.25s}
+.tog-sl:before{content:'';position:absolute;height:20px;width:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.25s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.toggle input:checked+.tog-sl{background:var(--accent)}
+.toggle input:checked+.tog-sl:before{transform:translateX(18px)}
+.sr-btn{
+  background:none;border:1.5px solid var(--border2);border-radius:10px;
+  color:var(--text);padding:7px 14px;font-size:12px;font-weight:700;
+  cursor:pointer;font-family:var(--font);transition:all .15s;
+}
+.sr-btn:active{transform:scale(.94);background:var(--bg2)}
+.sr-btn.red{border-color:var(--red);color:var(--red)}
+select.sr-sel{
+  background:var(--bg2);color:var(--text);
+  border:1.5px solid var(--border2);border-radius:10px;
+  padding:7px 10px;font-size:12px;font-family:var(--font);font-weight:700;
+  -webkit-appearance:none;appearance:none;cursor:pointer;
+}
+
+/* ── INSTALL BANNER ── */
+.install-card{
+  margin:0 16px 12px;
+  background:linear-gradient(135deg,var(--accent-light),var(--accent-mid));
+  border:1.5px solid var(--accent-mid);
+  border-radius:var(--r);padding:14px 16px;
+  box-shadow:var(--shadow);
+}
+.install-card h3{font-size:13px;font-weight:800;color:var(--accent);margin-bottom:6px}
+.install-card p{font-size:12px;color:var(--accent);line-height:1.6;opacity:.85}
+
+/* ── FOCUS TIMER ── */
+.fab{
+  position:fixed;bottom:80px;right:16px;
+  width:54px;height:54px;border-radius:50%;
+  background:var(--accent);border:none;color:#fff;
+  font-size:22px;cursor:pointer;
+  box-shadow:0 4px 18px rgba(91,79,212,.4);
+  z-index:50;display:flex;align-items:center;justify-content:center;
+  transition:transform .15s,box-shadow .15s;
+}
+.fab:active{transform:scale(.9);box-shadow:0 2px 8px rgba(91,79,212,.3)}
+
+.focus-overlay{
+  position:fixed;inset:0;
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(16px);
+  z-index:200;display:none;
+  flex-direction:column;align-items:center;justify-content:center;
+  padding:30px;
+}
+.focus-overlay.visible{display:flex}
+.fo-subj{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.fo-task{font-size:20px;font-weight:800;text-align:center;margin-bottom:28px;line-height:1.3;color:var(--text)}
+.fo-ring-wrap{position:relative;width:200px;height:200px;margin-bottom:26px}
+.fo-ring-wrap svg{transform:rotate(-90deg)}
+.fo-time-box{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.fo-time{font-size:48px;font-weight:800;font-family:var(--mono);color:var(--text);line-height:1}
+.fo-phase{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:6px}
+.fo-btns{display:flex;gap:10px}
+.fo-btn{
+  padding:13px 26px;border-radius:14px;border:none;
+  font-size:14px;font-weight:800;cursor:pointer;font-family:var(--font);
+  transition:transform .15s,opacity .15s;
+}
+.fo-btn:active{transform:scale(.94)}
+.fo-btn.primary{background:var(--accent);color:#fff;box-shadow:0 4px 14px rgba(91,79,212,.3)}
+.fo-btn.secondary{background:var(--bg2);color:var(--text);border:1.5px solid var(--border2)}
+.fo-info{font-size:11px;color:var(--muted);margin-top:16px;font-family:var(--mono);font-weight:500}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:80px;left:50%;
+  transform:translateX(-50%) translateY(30px);
+  background:var(--text);color:#fff;
+  border-radius:14px;padding:12px 22px;
+  font-size:13px;font-weight:700;z-index:999;
+  opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);
+  white-space:nowrap;pointer-events:none;
+  box-shadow:0 6px 20px rgba(0,0,0,.2);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.green{background:var(--green)}
+.toast.blue{background:var(--blue)}
+.toast.amber{background:var(--amber)}
+
+/* Stagger animation for cards */
+@keyframes slideUp{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.slot-card,.subj-card,.tt-slot,.prog-card,.cd-box{
+  animation:slideUp .3s ease both;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- PAGES -->
+  <div class="pages">
+
+    <!-- TODAY -->
+    <div id="pg-today" class="page active">
+      <div class="page-header" id="hdr-today">
+        <div class="page-title" id="today-day">Monday</div>
+        <div class="page-sub" id="today-date-sub"></div>
+      </div>
+      <div class="hero-card">
+        <div class="hero-greeting" id="hero-greeting">GOOD MORNING</div>
+        <div class="hero-main" id="hero-main">Ready to study? ✏️</div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-val" id="h-days">—</div>
+            <div class="hero-lab">days to exam</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-val" id="h-hrs">0h</div>
+            <div class="hero-lab">studied today</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-val" id="h-pct">0%</div>
+            <div class="hero-lab">tasks done</div>
+          </div>
+        </div>
+      </div>
+      <div id="notif-wrap"></div>
+      <div class="daily-prog">
+        <div class="prog-top">
+          <span class="prog-title">Daily progress</span>
+          <span class="prog-count" id="prog-count">0 / 0</span>
+        </div>
+        <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+        <div class="hrs-row">
+          <span id="hrs-studied">0h studied</span>
+          <span>target: 8h</span>
+        </div>
+      </div>
+      <div class="section-label">Today's schedule</div>
+      <div id="slots-con"></div>
+    </div>
+
+    <!-- TIMETABLE -->
+    <div id="pg-timetable" class="page">
+      <div class="page-header" id="hdr-tt">
+        <div class="page-title">Timetable</div>
+        <div class="page-sub">weekly overview</div>
+      </div>
+      <div class="week-tabs" id="week-tabs"></div>
+      <div class="tt-list" id="tt-slots"></div>
+    </div>
+
+    <!-- SUBJECTS -->
+    <div id="pg-subjects" class="page">
+      <div class="page-header">
+        <div class="page-title">Subjects</div>
+        <div class="page-sub">tap to mark progress</div>
+      </div>
+      <div id="subj-list"></div>
+    </div>
+
+    <!-- PROGRESS -->
+    <div id="pg-progress" class="page">
+      <div class="page-header">
+        <div class="page-title">Progress</div>
+        <div class="page-sub">your october journey</div>
+      </div>
+      <div class="cd-grid" id="cd-grid"></div>
+      <div class="prog-card">
+        <h3>Subject completion</h3>
+        <div id="subj-bars"></div>
+      </div>
+      <div class="cal-card">
+        <div class="cal-head">
+          <h3>Study calendar</h3>
+          <span style="font-size:11px;color:var(--muted);font-family:var(--mono)" id="cal-month"></span>
+        </div>
+        <div class="cal-dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+        <div class="cal-grid" id="cal-grid"></div>
+        <div class="cal-legend">
+          <span><i style="background:#d4f0e2"></i>1–2</span>
+          <span><i style="background:#7cd8a8"></i>3–5</span>
+          <span><i style="background:var(--green)"></i>6+</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="pg-settings" class="page">
+      <div class="page-header">
+        <div class="page-title">Settings</div>
+        <div class="page-sub">customise studyos</div>
+      </div>
+      <div class="install-card">
+        <h3>📱 Install as App</h3>
+        <p>iPhone: Share → Add to Home Screen<br>Android: ⋮ menu → Add to Home Screen<br>Works offline once installed!</p>
+      </div>
+      <div class="set-section">
+        <div class="set-title">Notifications</div>
+        <div class="set-row">
+          <span class="sr-icon">🔔</span>
+          <div class="sr-info"><div class="sr-label">Session reminders</div><div class="sr-sub">Alert 5 min before each session</div></div>
+          <label class="toggle"><input type="checkbox" id="tog-sess" checked onchange="sv('sessionNotif',this.checked)"><span class="tog-sl"></span></label>
+        </div>
+        <div class="set-row">
+          <span class="sr-icon">☕</span>
+          <div class="sr-info"><div class="sr-label">Break alerts</div><div class="sr-sub">Notify when break starts</div></div>
+          <label class="toggle"><input type="checkbox" id="tog-brk" checked onchange="sv('breakNotif',this.checked)"><span class="tog-sl"></span></label>
+        </div>
+        <div class="set-row">
+          <span class="sr-icon">💪</span>
+          <div class="sr-info"><div class="sr-label">Gym reminder</div><div class="sr-sub">Alert at 9:00 PM daily</div></div>
+          <label class="toggle"><input type="checkbox" id="tog-gym" checked onchange="sv('gymNotif',this.checked)"><span class="tog-sl"></span></label>
+        </div>
+        <div class="set-row">
+          <span class="sr-icon">🌅</span>
+          <div class="sr-info"><div class="sr-label">Morning alarm</div><div class="sr-sub">Wake up at 6:00 AM</div></div>
+          <label class="toggle"><input type="checkbox" id="tog-morn" checked onchange="sv('morningNotif',this.checked)"><span class="tog-sl"></span></label>
+        </div>
+        <div class="set-row">
+          <span class="sr-icon">📡</span>
+          <div class="sr-info"><div class="sr-label">Status</div><div class="sr-sub" id="notif-status">Not set</div></div>
+          <button class="sr-btn" onclick="askNotif()">Enable</button>
+        </div>
+      </div>
+      <div class="set-section">
+        <div class="set-title">Focus Timer</div>
+        <div class="set-row">
+          <span class="sr-icon">⏱</span>
+          <div class="sr-info"><div class="sr-label">Session length</div><div class="sr-sub">Pomodoro duration</div></div>
+          <select class="sr-sel" id="sel-pomo" onchange="sv('pomoLen',this.value)">
+            <option value="25">25 min</option>
+            <option value="45" selected>45 min</option>
+            <option value="50">50 min</option>
+            <option value="60">60 min</option>
+          </select>
+        </div>
+      </div>
+      <div class="set-section">
+        <div class="set-title">Data</div>
+        <div class="set-row">
+          <span class="sr-icon">↩️</span>
+          <div class="sr-info"><div class="sr-label">Reset today</div><div class="sr-sub">Clear today's ticks only</div></div>
+          <button class="sr-btn" onclick="resetToday()">Reset</button>
+        </div>
+        <div class="set-row">
+          <span class="sr-icon">⚠️</span>
+          <div class="sr-info"><div class="sr-label">Reset everything</div><div class="sr-sub">Clear all topics & calendar</div></div>
+          <button class="sr-btn red" onclick="resetAll()">Reset all</button>
+        </div>
+      </div>
+      <div style="text-align:center;padding:20px;font-size:11px;color:var(--dim);font-family:var(--mono)">
+        StudyOS v2.0 · October exams<br>Math · Physics · CS · English
+      </div>
+    </div>
+
+  </div><!-- /pages -->
+
+  <!-- BOTTOM NAV -->
+  <nav class="nav-bar">
+    <button class="nav-item active" onclick="go('today',this)">
+      <span class="nav-icon">📋</span><span class="nav-label">Today</span>
+    </button>
+    <button class="nav-item" onclick="go('timetable',this)">
+      <span class="nav-icon">📅</span><span class="nav-label">Schedule</span>
+    </button>
+    <button class="nav-item" onclick="go('subjects',this)">
+      <span class="nav-icon">📚</span><span class="nav-label">Subjects</span>
+    </button>
+    <button class="nav-item" onclick="go('progress',this)">
+      <span class="nav-icon">📈</span><span class="nav-label">Progress</span>
+    </button>
+    <button class="nav-item" onclick="go('settings',this)">
+      <span class="nav-icon">⚙️</span><span class="nav-label">Settings</span>
+    </button>
+  </nav>
+</div><!-- /app -->
+
+<!-- FAB -->
+<button class="fab" onclick="openFocus(null)">⏱</button>
+
+<!-- FOCUS OVERLAY -->
+<div class="focus-overlay" id="focus-ov">
+  <div class="fo-subj" id="fo-subj">MATH</div>
+  <div class="fo-task" id="fo-task">Pure 1 – Algebra</div>
+  <div class="fo-ring-wrap">
+    <svg width="200" height="200" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="86" fill="none" stroke="#eeece8" stroke-width="10"/>
+      <circle id="fo-ring" cx="100" cy="100" r="86" fill="none" stroke="var(--accent)"
+        stroke-width="10" stroke-linecap="round"
+        stroke-dasharray="540" stroke-dashoffset="0"
+        style="transition:stroke-dashoffset 1s linear"/>
+    </svg>
+    <div class="fo-time-box">
+      <div class="fo-time" id="fo-time">45:00</div>
+      <div class="fo-phase" id="fo-phase">focus</div>
+    </div>
+  </div>
+  <div class="fo-btns">
+    <button class="fo-btn primary" id="fo-main-btn" onclick="toggleTimer()">Start</button>
+    <button class="fo-btn secondary" onclick="closeFocus()">Close</button>
+  </div>
+  <div class="fo-info" id="fo-info"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════
+//  HELPERS
+// ═══════════════════════════════
+function fmt12(timeStr){
+  // "06:30" → "6:30 AM", "14:00" → "2:00 PM"
+  const [h,m]=timeStr.split(':').map(Number);
+  const ampm=h<12?'AM':'PM';
+  const h12=h===0?12:h>12?h-12:h;
+  return h12+':'+(m<10?'0':'')+m+' '+ampm;
+}
+
+function todayKey(){
+  const d=new Date();
+  return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+}
+function topicKey(s,p,t){return s+'::'+p+'::'+t}
+
+// ═══════════════════════════════
+//  DATA
+// ═══════════════════════════════
+const EXAM = new Date('2025-10-01T08:00:00');
+
+const SCHED=[
+  {id:'wakeup',time:'06:00',label:'Wake up & morning routine',type:'break-slot'},
+  {id:'s1',time:'06:30',label:'Math – Pure 1 / Pure 2',sub:'Edexcel · 2 hrs deep focus',type:'math',hours:2,subj:'Math'},
+  {id:'bfast',time:'08:30',label:'Breakfast break',type:'break-slot'},
+  {id:'s2',time:'09:00',label:'Physics – MCQ Paper',sub:'Edexcel · 2 hrs practice',type:'physics',hours:2,subj:'Physics'},
+  {id:'brk1',time:'11:00',label:'Short break (15 min)',type:'break-slot'},
+  {id:'s3',time:'11:15',label:'CS – Paper 1 / Practical',sub:'Edexcel · 2 hrs focused',type:'cs',hours:2,subj:'CS'},
+  {id:'lunch',time:'13:15',label:'Lunch break',type:'break-slot'},
+  {id:'s4',time:'14:00',label:'English – Reading & Writing',sub:'Cambridge ESL · 2 hrs',type:'english',hours:2,subj:'English'},
+  {id:'brk2',time:'16:00',label:'Break / review notes',type:'break-slot'},
+  {id:'s5',time:'16:30',label:'Math – Statistics',sub:'Edexcel · 1 hr revision',type:'math',hours:1,subj:'Math'},
+  {id:'brk3',time:'17:30',label:'Break',type:'break-slot'},
+  {id:'s6',time:'18:00',label:'Physics – Paper 2 Q&A',sub:'Edexcel · 1 hr past papers',type:'physics',hours:1,subj:'Physics'},
+  {id:'free',time:'19:00',label:'Dinner & rest',type:'break-slot'},
+  {id:'gym',time:'21:00',label:'Gym session 💪',sub:'Night workout',type:'gym-slot',hours:0,subj:'Gym'},
+  {id:'sleep',time:'22:30',label:'Wind down & sleep',type:'break-slot'},
+];
+
+const WEEKLY={
+  Mon:[
+    {time:'6:30 AM–8:30 AM',subj:'Math',topic:'Pure 1 – Algebra & functions',type:'math'},
+    {time:'9:00 AM–11:00 AM',subj:'Physics',topic:'MCQ practice set',type:'physics'},
+    {time:'11:15 AM–1:15 PM',subj:'CS',topic:'Paper 1 – Theory & architecture',type:'cs'},
+    {time:'2:00 PM–4:00 PM',subj:'English',topic:'Reading comprehension',type:'english'},
+    {time:'4:30–5:30 PM',subj:'Math',topic:'Statistics – sampling',type:'math'},
+    {time:'6:00–7:00 PM',subj:'Physics',topic:'Paper 2 structured Qs',type:'physics'},
+    {time:'9:00 PM',subj:'Gym',topic:'Night workout',type:'gym'},
+  ],
+  Tue:[
+    {time:'6:30 AM–8:30 AM',subj:'Math',topic:'Pure 1 – Calculus intro',type:'math'},
+    {time:'9:00 AM–11:00 AM',subj:'Physics',topic:'Paper 2 Q&A practice',type:'physics'},
+    {time:'11:15 AM–1:15 PM',subj:'CS',topic:'Practical – Python basics',type:'cs'},
+    {time:'2:00 PM–4:00 PM',subj:'English',topic:'Directed writing',type:'english'},
+    {time:'4:30–5:30 PM',subj:'Physics',topic:'MCQ timed drill',type:'physics'},
+    {time:'6:00–7:00 PM',subj:'Math',topic:'Pure 2 – Logs & exponentials',type:'math'},
+    {time:'9:00 PM',subj:'Gym',topic:'Night workout',type:'gym'},
+  ],
+  Wed:[
+    {time:'6:30 AM–8:30 AM',subj:'Math',topic:'Pure 2 – Trigonometry',type:'math'},
+    {time:'9:00 AM–11:00 AM',subj:'Physics',topic:'MCQ timed test',type:'physics'},
+    {time:'11:15 AM–1:15 PM',subj:'CS',topic:'Data structures & algorithms',type:'cs'},
+    {time:'2:00 PM–4:00 PM',subj:'English',topic:'Listening skills',type:'english'},
+    {time:'4:30–5:30 PM',subj:'Math',topic:'Statistics – probability',type:'math'},
+    {time:'6:00–7:00 PM',subj:'CS',topic:'Practical – file handling',type:'cs'},
+    {time:'9:00 PM',subj:'Gym',topic:'Night workout',type:'gym'},
+  ],
+  Thu:[
+    {time:'6:30 AM–8:30 AM',subj:'Math',topic:'Pure 2 – Further calculus',type:'math'},
+    {time:'9:00 AM–11:00 AM',subj:'CS',topic:'Practical mock',type:'cs'},
+    {time:'11:15 AM–1:15 PM',subj:'Physics',topic:'Theory review – waves',type:'physics'},
+    {time:'2:00 PM–4:00 PM',subj:'English',topic:'Past papers',type:'english'},
+    {time:'4:30–5:30 PM',subj:'Math',topic:'Mixed practice',type:'math'},
+    {time:'6:00–7:00 PM',subj:'Physics',topic:'Electricity topic',type:'physics'},
+    {time:'9:00 PM',subj:'Gym',topic:'Night workout',type:'gym'},
+  ],
+  Fri:[
+    {time:'6:30 AM–8:30 AM',subj:'Math',topic:'Past paper – Pure',type:'math'},
+    {time:'9:00 AM–11:00 AM',subj:'Physics',topic:'Full paper practice',type:'physics'},
+    {time:'11:15 AM–1:15 PM',subj:'CS',topic:'Debugging & testing',type:'cs'},
+    {time:'2:00 PM–4:00 PM',subj:'English',topic:'Full mock paper',type:'english'},
+    {time:'4:30–5:30 PM',subj:'Math',topic:'Weak areas review',type:'math'},
+    {time:'6:00–7:00 PM',subj:'Review',topic:'All subjects – mistakes',type:'cs'},
+    {time:'9:00 PM',subj:'Gym',topic:'Night workout',type:'gym'},
+  ],
+  Sat:[
+    {time:'6:30 AM–8:30 AM',subj:'Math',topic:'Statistics full review',type:'math'},
+    {time:'9:00 AM–11:00 AM',subj:'Physics',topic:'MCQ marathon',type:'physics'},
+    {time:'11:15 AM–1:15 PM',subj:'CS',topic:'Full practical mock',type:'cs'},
+    {time:'2:00 PM–4:00 PM',subj:'English',topic:'Writing drills',type:'english'},
+    {time:'4:30–6:00 PM',subj:'All',topic:'Review all mistakes',type:'cs'},
+  ],
+  Sun:[
+    {time:'6:30 AM–9:00 AM',subj:'Math',topic:'Full mock paper',type:'math'},
+    {time:'9:30–11:30 AM',subj:'Physics',topic:'Full mock paper',type:'physics'},
+    {time:'12:00–2:00 PM',subj:'CS',topic:'Full mock paper',type:'cs'},
+    {time:'2:30–4:00 PM',subj:'English',topic:'Review & light study',type:'english'},
+    {time:'Evening',subj:'Rest',topic:'Light review only',type:'rest'},
+  ],
+};
+
+const SUBJECTS=[
+  {id:'math',name:'Mathematics',board:'Edexcel AS',icon:'📐',clr:'var(--blue)',fill:'#1a6fd4',
+   papers:[
+    {n:'Pure 1',topics:['Algebra & functions','Coordinate geometry','Sequences & series','Trigonometry','Exponentials & logarithms','Differentiation','Integration']},
+    {n:'Pure 2',topics:['Proof','Partial fractions','Further algebra','Further calculus','Further trigonometry','Numerical methods']},
+    {n:'Statistics',topics:['Statistical sampling','Data presentation','Probability','Statistical distributions','Hypothesis testing']}
+  ]},
+  {id:'physics',name:'Physics',board:'Edexcel AS',icon:'⚛️',clr:'var(--accent)',fill:'#5b4fd4',
+   papers:[
+    {n:'Paper 1 – MCQ',topics:['Mechanics','Materials','Waves','Electricity','Units & measurements','Scalars & vectors']},
+    {n:'Paper 2 – Written',topics:['Quantum physics','Particle physics','Specific heat capacity','Young modulus','Practical skills','Data analysis']}
+  ]},
+  {id:'cs',name:'Computer Science',board:'Edexcel AS',icon:'💻',clr:'var(--teal)',fill:'#0e8a72',
+   papers:[
+    {n:'Paper 1 – Theory',topics:['Programming fundamentals','Data structures','Algorithms','Computer architecture','Networks & protocols','Databases & SQL']},
+    {n:'Paper 2 – Practical',topics:['Python programming','File handling','Functions & procedures','Testing & debugging','Problem decomposition','Documentation']}
+  ]},
+  {id:'english',name:'English (ESL)',board:'Cambridge AS',icon:'📝',clr:'var(--amber)',fill:'#c07810',
+   papers:[
+    {n:'Reading & Writing',topics:['Comprehension skills','Summary writing','Directed writing','Formal letters','Report writing']},
+    {n:'Listening & Speaking',topics:['Listening comprehension','Note-taking skills','Oral presentation','Interview skills']}
+  ]},
+];
+
+// ═══════════════════════════════
+//  STATE
+// ═══════════════════════════════
+let S={checked:{},topics:{},studyDays:{},settings:{sessionNotif:true,breakNotif:true,gymNotif:true,morningNotif:true,pomoLen:45}};
+(function(){try{const x=localStorage.getItem('sOS3');if(x)S={...S,...JSON.parse(x)}}catch(e){}})();
+function save(){try{localStorage.setItem('sOS3',JSON.stringify(S))}catch(e){}}
+function sv(k,v){S.settings[k]=v;save()}
+
+// ═══════════════════════════════
+//  NAV
+// ═══════════════════════════════
+let curPage='today';
+function go(name,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('pg-'+name).classList.add('active');
+  el.classList.add('active');
+  curPage=name;
+  if(name==='today') renderToday();
+  else if(name==='timetable') renderTT();
+  else if(name==='subjects') renderSubjects();
+  else if(name==='progress') renderProgress();
+  else if(name==='settings') renderSettings();
+  document.getElementById('pg-'+name).scrollTop=0;
+}
+
+// Sticky header shadow
+document.querySelectorAll('.page').forEach(pg=>{
+  pg.addEventListener('scroll',()=>{
+    const hdr=pg.querySelector('.page-header');
+    if(hdr) hdr.classList.toggle('scrolled',pg.scrollTop>8);
+  });
+});
+
+// ═══════════════════════════════
+//  TODAY
+// ═══════════════════════════════
+function currentSlot(){
+  const now=new Date(),m=now.getHours()*60+now.getMinutes();
+  for(let i=0;i<SCHED.length;i++){
+    const [h,mn]=SCHED[i].time.split(':').map(Number);
+    const sm=h*60+mn;
+    const next=SCHED[i+1];
+    const nm=next?(()=>{const[a,b]=next.time.split(':').map(Number);return a*60+b})():1440;
+    if(m>=sm&&m<nm)return SCHED[i].id;
+  }
+  return null;
+}
+
+function renderToday(){
+  const now=new Date();
+  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const h=now.getHours();
+  const greet=h<12?'GOOD MORNING ☀️':h<17?'GOOD AFTERNOON 🌤':h<21?'GOOD EVENING 🌆':'GOOD NIGHT 🌙';
+  const msg=h<12?'Ready to study? ✏️':h<17?'Keep it up! 💪':h<21?'Evening grind 🌇':'Rest well tonight 🌙';
+
+  document.getElementById('today-day').textContent=days[now.getDay()];
+  document.getElementById('today-date-sub').textContent=now.getDate()+' '+months[now.getMonth()]+' '+now.getFullYear();
+  document.getElementById('hero-greeting').textContent=greet;
+  document.getElementById('hero-main').textContent=msg;
+
+  const dLeft=Math.max(0,Math.ceil((EXAM-now)/(864e5)));
+  document.getElementById('h-days').textContent=dLeft;
+
+  const tk=todayKey();
+  if(!S.checked[tk])S.checked[tk]={};
+  const studySlots=SCHED.filter(s=>s.hours>0);
+  let done=0,dHrs=0;
+  studySlots.forEach(s=>{if(S.checked[tk][s.id]){done++;dHrs+=s.hours}});
+  const pct=studySlots.length?Math.round(done/studySlots.length*100):0;
+  const totalHrs=studySlots.reduce((a,s)=>a+s.hours,0);
+
+  document.getElementById('h-hrs').textContent=dHrs+'/'+ totalHrs+'h';
+  document.getElementById('h-pct').textContent=pct+'%';
+  document.getElementById('prog-count').textContent=done+' / '+studySlots.length;
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('hrs-studied').textContent=dHrs+'h studied';
+
+  // Notif banner
+  const nb=document.getElementById('notif-wrap');
+  nb.innerHTML=Notification.permission==='default'
+    ?`<div class="notif-banner"><div class="nb-text">Enable notifications for break & session reminders!</div><button class="nb-btn" onclick="askNotif()">Enable 🔔</button></div>`
+    :'';
+
+  // Slots
+  const con=document.getElementById('slots-con');
+  con.innerHTML='';
+  const nowId=currentSlot();
+
+  SCHED.forEach((slot,i)=>{
+    const isStudy=!!slot.hours;
+    const isDone=isStudy&&S.checked[tk][slot.id];
+    const isNow=slot.id===nowId;
+    const isBreak=slot.type==='break-slot';
+
+    const d=document.createElement('div');
+    d.className=`slot-card ${slot.type}${isDone?' done-slot':''}${isNow?' now-slot':''}`;
+    d.style.animationDelay=(i*0.04)+'s';
+
+    const timeLabel=fmt12(slot.time);
+
+    let left='';
+    if(isStudy){
+      left=`<button class="check-circle${isDone?' ticked':''}" onclick="event.stopPropagation();tick('${slot.id}')" aria-label="Mark done">${isDone?'✓':''}</button>`;
+    } else if(isNow){
+      left=`<div class="pulse-dot"></div>`;
+    }
+
+    d.innerHTML=`${left}
+      <div class="slot-body">
+        <div class="slot-title">${slot.label}${isNow?'<span class="now-badge">NOW</span>':''}</div>
+        ${slot.sub?`<div class="slot-meta">${slot.sub}</div>`:''}
+      </div>
+      <div class="slot-time">${timeLabel}</div>`;
+
+    if(isStudy) d.onclick=()=>openFocus(slot);
+    con.appendChild(d);
+  });
+}
+
+function tick(id){
+  const tk=todayKey();
+  if(!S.checked[tk])S.checked[tk]={};
+  S.checked[tk][id]=!S.checked[tk][id];
+  const studySlots=SCHED.filter(s=>s.hours>0);
+  S.studyDays[tk]=studySlots.filter(s=>S.checked[tk][s.id]).length;
+  save();
+  const slot=SCHED.find(s=>s.id===id);
+  if(S.checked[tk][id]) toast('✓ Done: '+slot.label,'green');
+  renderToday();
+}
+
+// ═══════════════════════════════
+//  TIMETABLE
+// ═══════════════════════════════
+let selDay=null;
+function renderTT(){
+  const dnames=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const todayDow=new Date().getDay();
+  const map={Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6,Sun:0};
+  if(!selDay) selDay=dnames[todayDow===0?6:todayDow-1];
+
+  const tabs=document.getElementById('week-tabs');
+  tabs.innerHTML='';
+  dnames.forEach(d=>{
+    const b=document.createElement('button');
+    b.className='day-tab'+(d===selDay?' selected':'')+(map[d]===todayDow?' today-t':'');
+    b.textContent=d+(map[d]===todayDow?' ·':' ');
+    b.onclick=()=>{selDay=d;renderTT()};
+    tabs.appendChild(b);
+  });
+
+  const con=document.getElementById('tt-slots');
+  con.innerHTML='';
+  (WEEKLY[selDay]||[]).forEach((s,i)=>{
+    const d=document.createElement('div');
+    d.className=`tt-slot ${s.type}`;
+    d.style.animationDelay=(i*.05)+'s';
+    const pillClass='sp-'+s.type;
+    d.innerHTML=`<div class="tt-time">${s.time}</div>
+      <div>
+        <div class="tt-subj">${s.subj}</div>
+        ${s.topic?`<div class="tt-topic">${s.topic}</div>`:''}
+        <span class="subj-pill ${pillClass}">${s.subj}</span>
+      </div>`;
+    con.appendChild(d);
+  });
+}
+
+// ═══════════════════════════════
+//  SUBJECTS
+// ═══════════════════════════════
+const openS=new Set();
+function renderSubjects(){
+  const list=document.getElementById('subj-list');
+  list.innerHTML='';
+  SUBJECTS.forEach((subj,si)=>{
+    let total=0,done=0;
+    subj.papers.forEach(p=>p.topics.forEach(t=>{total++;if(S.topics[topicKey(subj.id,p.n,t)]==='done')done++;}));
+    const pct=total?Math.round(done/total*100):0;
+    const isOpen=openS.has(subj.id);
+
+    const card=document.createElement('div');
+    card.className='subj-card';
+    card.style.animationDelay=(si*.07)+'s';
+
+    const bodyHtml=subj.papers.map(p=>`
+      <div class="paper-title">${p.n}</div>
+      ${p.topics.map(t=>{
+        const k=topicKey(subj.id,p.n,t);
+        const st=S.topics[k]||'todo';
+        return`<div class="topic-row" onclick="cycleTopic('${k}')">
+          <div class="topic-dot ${st==='done'?'done':st==='inprog'?'inprog':''}">
+            ${st==='done'?'✓':st==='inprog'?'~':''}
+          </div>
+          <span class="topic-name">${t}</span>
+          <span class="topic-tag ${st==='done'?'tag-done':st==='inprog'?'tag-inprog':'tag-todo'}">
+            ${st==='done'?'Done':st==='inprog'?'In progress':'To do'}
+          </span>
+        </div>`;
+      }).join('')}
+    `).join('');
+
+    card.innerHTML=`
+      <div class="subj-head" onclick="togSubj('${subj.id}')">
+        <div class="subj-icon" style="background:${subj.fill}18">${subj.icon}</div>
+        <div class="subj-meta">
+          <div class="subj-name">${subj.name}</div>
+          <div class="subj-board">${subj.board}</div>
+        </div>
+        <div class="subj-pct" style="color:${subj.fill}">${pct}%</div>
+      </div>
+      <div class="subj-bar-wrap"><div class="subj-bar-fill" style="width:${pct}%;background:${subj.fill}"></div></div>
+      <div class="subj-body" id="sb-${subj.id}" style="${isOpen?'':'display:none'}">${bodyHtml}</div>`;
+    list.appendChild(card);
+  });
+}
+function togSubj(id){
+  openS.has(id)?openS.delete(id):openS.add(id);
+  renderSubjects();
+}
+function cycleTopic(key){
+  const cyc=['todo','inprog','done'];
+  const cur=S.topics[key]||'todo';
+  S.topics[key]=cyc[(cyc.indexOf(cur)+1)%3];
+  save();
+  const st=S.topics[key];
+  toast(st==='done'?'✓ Topic done!':st==='inprog'?'~ In progress':'↩ Back to to do',
+        st==='done'?'green':st==='inprog'?'amber':'');
+  renderSubjects();
+  renderProgress();
+}
+
+// ═══════════════════════════════
+//  PROGRESS
+// ═══════════════════════════════
+function renderProgress(){
+  const now=new Date();
+  const dLeft=Math.max(0,Math.ceil((EXAM-now)/(864e5)));
+  const wLeft=Math.floor(dLeft/7);
+  const mLeft=Math.max(0,(EXAM.getFullYear()-now.getFullYear())*12+EXAM.getMonth()-now.getMonth());
+  const hLeft=dLeft*8;
+  const cdColors=[['var(--red)','days left'],['var(--amber)','weeks left'],['var(--accent)','months'],['var(--teal)',hLeft+'h avail']];
+  const cdVals=[dLeft,wLeft,mLeft,''];
+  document.getElementById('cd-grid').innerHTML=[dLeft,wLeft,mLeft,hLeft].map((v,i)=>`
+    <div class="cd-box" style="animation-delay:${i*.08}s">
+      <div class="cd-val" style="color:${cdColors[i][0]}">${v}</div>
+      <div class="cd-lab">${cdColors[i][1]}</div>
+    </div>`).join('');
+
+  const bars=document.getElementById('subj-bars');
+  bars.innerHTML='';
+  SUBJECTS.forEach(subj=>{
+    let total=0,done=0;
+    subj.papers.forEach(p=>p.topics.forEach(t=>{total++;if(S.topics[topicKey(subj.id,p.n,t)]==='done')done++;}));
+    const pct=total?Math.round(done/total*100):0;
+    bars.innerHTML+=`<div class="sbr">
+      <span class="sbr-name">${subj.icon} ${subj.name.split(' ')[0]}</span>
+      <div class="sbr-track"><div class="sbr-fill" style="width:${pct}%;background:${subj.fill}"></div></div>
+      <span class="sbr-pct" style="color:${subj.fill}">${pct}%</span>
+    </div>`;
+  });
+
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('cal-month').textContent=months[now.getMonth()]+' '+now.getFullYear();
+  const first=new Date(now.getFullYear(),now.getMonth(),1);
+  let dow=first.getDay();dow=dow===0?6:dow-1;
+  const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+  const cal=document.getElementById('cal-grid');
+  cal.innerHTML='';
+  for(let i=0;i<dow;i++){const b=document.createElement('div');b.className='cal-cell';cal.appendChild(b);}
+  for(let d=1;d<=dim;d++){
+    const k=now.getFullYear()+'-'+(now.getMonth()+1)+'-'+d;
+    const cnt=S.studyDays[k]||0;
+    const isT=d===now.getDate(),isF=d>now.getDate();
+    let cls='cal-cell';
+    if(cnt>=6)cls+=' s4';else if(cnt>=3)cls+=' s3';else if(cnt>=1)cls+=' s2';else if(cnt>0)cls+=' s1';
+    if(isT)cls+=' today-c';if(isF)cls+=' future-c';
+    const div=document.createElement('div');div.className=cls;div.textContent=d;cal.appendChild(div);
+  }
+}
+
+// ═══════════════════════════════
+//  SETTINGS
+// ═══════════════════════════════
+function renderSettings(){
+  document.getElementById('tog-sess').checked=S.settings.sessionNotif!==false;
+  document.getElementById('tog-brk').checked=S.settings.breakNotif!==false;
+  document.getElementById('tog-gym').checked=S.settings.gymNotif!==false;
+  document.getElementById('tog-morn').checked=S.settings.morningNotif!==false;
+  document.getElementById('sel-pomo').value=S.settings.pomoLen||45;
+  const p=Notification.permission;
+  document.getElementById('notif-status').textContent=
+    p==='granted'?'✅ Enabled – you will get alerts':
+    p==='denied'?'❌ Blocked in browser settings':'⚠️ Not enabled yet – tap Enable';
+}
+function resetToday(){
+  if(confirm('Reset today\'s ticks?')){
+    delete S.checked[todayKey()];delete S.studyDays[todayKey()];
+    save();renderToday();toast('Today reset','amber');
+  }
+}
+function resetAll(){
+  if(confirm('Reset ALL data? Cannot be undone.')){
+    S.checked={};S.topics={};S.studyDays={};save();
+    renderToday();renderSubjects();renderProgress();toast('All data cleared','amber');
+  }
+}
+
+// ═══════════════════════════════
+//  NOTIFICATIONS
+// ═══════════════════════════════
+async function askNotif(){
+  if(!('Notification' in window)){toast('Not supported on this browser','amber');return;}
+  const p=await Notification.requestPermission();
+  if(p==='granted'){toast('🔔 Notifications on!','green');schedNotifs();}
+  else toast('Notifications blocked','amber');
+  renderSettings();
+}
+function notif(title,body){
+  if(Notification.permission==='granted')
+    new Notification(title,{body,icon:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">📚</text></svg>'});
+}
+function schedNotifs(){
+  if(Notification.permission!=='granted')return;
+  const now=new Date();
+  SCHED.forEach(slot=>{
+    const[h,m]=slot.time.split(':').map(Number);
+    const st=new Date();st.setHours(h,m,0,0);
+    const st5=new Date(st.getTime()-5*60*1000);
+    if(slot.hours>0&&S.settings.sessionNotif!==false){
+      if(st5>now)setTimeout(()=>notif('📚 Starting in 5 min',slot.label),st5-now);
+      if(st>now)setTimeout(()=>notif('📚 Study time!',slot.label),st-now);
+    }
+    if(slot.type==='break-slot'&&S.settings.breakNotif!==false&&st>now)
+      setTimeout(()=>notif('☕ Break time!','Take a well-earned rest!'),st-now);
+    if(slot.id==='gym'&&S.settings.gymNotif!==false&&st>now)
+      setTimeout(()=>notif('💪 Gym time!','Time for your night workout!'),st-now);
+  });
+  const morn=new Date();morn.setHours(6,0,0,0);
+  if(S.settings.morningNotif!==false&&morn>now)
+    setTimeout(()=>notif('🌅 Wake up!','Time to start your study day!'),morn-now);
+}
+
+// ═══════════════════════════════
+//  FOCUS TIMER
+// ═══════════════════════════════
+let ftimer=null,frem=0,ftotal=0,frun=false,fphase='focus';
+const CIRC=2*Math.PI*86;
+
+function openFocus(slot){
+  if(slot){
+    document.getElementById('fo-subj').textContent=(slot.subj||'STUDY').toUpperCase();
+    document.getElementById('fo-task').textContent=slot.label;
+  }
+  const mins=parseInt(S.settings.pomoLen||45);
+  ftotal=mins*60;frem=ftotal;frun=false;fphase='focus';
+  updateFocusUI();
+  document.getElementById('focus-ov').classList.add('visible');
+  document.getElementById('fo-main-btn').textContent='Start';
+}
+function closeFocus(){
+  clearInterval(ftimer);frun=false;
+  document.getElementById('focus-ov').classList.remove('visible');
+}
+function toggleTimer(){
+  if(frun){clearInterval(ftimer);frun=false;document.getElementById('fo-main-btn').textContent='Resume';}
+  else{
+    frun=true;document.getElementById('fo-main-btn').textContent='Pause';
+    ftimer=setInterval(()=>{
+      if(frem<=0){
+        clearInterval(ftimer);frun=false;
+        if(fphase==='focus'){
+          fphase='break';ftotal=5*60;frem=ftotal;
+          document.getElementById('fo-main-btn').textContent='Start Break';
+          toast('🎉 Focus done! 5-min break','green');
+          notif('Break time!','Great work! Take 5 min 🎉');
+        } else {
+          fphase='focus';ftotal=parseInt(S.settings.pomoLen||45)*60;frem=ftotal;
+          document.getElementById('fo-main-btn').textContent='Start';
+          toast('Break over – back to focus!','blue');
+          notif('Back to study!','Break over. Time to focus 📚');
+        }
+      } else frem--;
+      updateFocusUI();
+    },1000);
+  }
+}
+function updateFocusUI(){
+  const mn=Math.floor(frem/60),sc=frem%60;
+  document.getElementById('fo-time').textContent=String(mn).padStart(2,'0')+':'+String(sc).padStart(2,'0');
+  document.getElementById('fo-ring').style.strokeDashoffset=CIRC*(1-frem/ftotal);
+  document.getElementById('fo-phase').textContent=fphase;
+  document.getElementById('fo-info').textContent=
+    fphase==='focus'?`${S.settings.pomoLen||45} min focus · 5 min break`:'Break – relax your mind 🧘';
+}
+
+// ═══════════════════════════════
+//  TOAST
+// ═══════════════════════════════
+let toastT=null;
+function toast(msg,type=''){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className='toast show '+(type||'');
+  clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2600);
+}
+
+// ═══════════════════════════════
+//  INIT
+// ═══════════════════════════════
+renderToday();
+if(Notification.permission==='granted')schedNotifs();
+setInterval(()=>{if(curPage==='today')renderToday();},60000);
+</script>
+</body>
+</html>
